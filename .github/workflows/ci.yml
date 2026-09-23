@@ -1,0 +1,29 @@
+name: API smoke + negative
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Smoke + negative (no writes; requires AUTH_MOBILE/AUTH_OTP secrets)
+        env:
+          ENV: pre
+          AUTH_MOBILE: ${{ secrets.AUTH_MOBILE }}
+          AUTH_OTP: ${{ secrets.AUTH_OTP }}
+          ALLOW_MUTATIONS: "0"
+        run: python -m pytest tests/smoke tests/negative -v

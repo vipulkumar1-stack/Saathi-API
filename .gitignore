@@ -1,0 +1,15 @@
+.env
+.env.*
+!.env.example
+.cache/
+__pycache__/
+*.pyc
+.pytest_cache/
+allure-results/
+allure-report/
+test-results/
+mutations-uncleaned.json
+reports/
+.venv/
+venv/
+*.egg-info/
